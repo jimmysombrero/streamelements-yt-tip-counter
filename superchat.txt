@@ -1,0 +1,23 @@
+details.listener === event
+
+{
+  "type": "superchat",
+  "provider": "youtube",
+  "channel": "",
+  "flagged": false,
+  "createdAt": "2026-08-08T16:25:43.891Z",
+  "data": {
+    "amount": 5,
+    "currency": "USD",
+    "username": "@xxxxxx",
+    "providerId": "",
+    "message": "Allison is so nice, so good to see her audience grow so much",
+    "avatar": "",
+    "quantity": 0
+  },
+  "_id": "",
+  "expiresAt": "2026-09-05T16:25:46.044Z",
+  "updatedAt": "2026-08-08T16:25:43.891Z",
+  "activityId": "",
+  "sessionEventsCount": 7
+}

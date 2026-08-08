@@ -1,0 +1,53 @@
+dteails.listener === message
+
+{
+  "service": "youtube",
+  "data": {
+    "kind": "youtube#liveChatMessage",
+    "etag": "",
+    "id": "",
+    "snippet": {
+      "type": "superStickerEvent",
+      "liveChatId": "",
+      "authorChannelId": "",
+      "publishedAt": "",
+      "hasDisplayContent": true,
+      "displayMessage": "SEK 20.00 from @xxxxxxx: \"Shiba dog with a big smile on his face, tilting his head\"",
+      "superStickerDetails": {
+        "amountMicros": "20000000",
+        "currency": "SEK",
+        "amountDisplayString": "SEK 20.00",
+        "tier": 1,
+        "superStickerMetadata": {
+          "stickerId": "bushiba_head_tilt",
+          "altText": "Shiba dog with a big smile on his face, tilting his head",
+          "altTextLanguage": "en_US"
+        }
+      }
+    },
+    "authorDetails": {
+      "channelId": "",
+      "channelUrl": "",
+      "displayName": "@xxxxxxxx",
+      "profileImageUrl": "",
+      "isVerified": false,
+      "isChatOwner": false,
+      "isChatSponsor": true,
+      "isChatModerator": false
+    },
+    "msgId": "",
+    "userId": "",
+    "nick": "@xxxxxx",
+    "badges": [],
+    "displayName": "@xxxxxx",
+    "isAction": false,
+    "time": 1786204926232,
+    "tags": [],
+    "displayColor": null,
+    "channel": "",
+    "text": "",
+    "emotes": [],
+    "avatar": ""
+  },
+  "renderedText": "<span></span>"
+}
