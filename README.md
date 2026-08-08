@@ -38,8 +38,6 @@ overlay and only reads chat messages that StreamElements already hands to widget
 
 | Setting | Default | Notes |
 | --- | --- | --- |
-| Relay bot username | `restreambot` | Change if your relay posts under a different name. |
-| Count Super Stickers too | Yes | Super Stickers are relayed the same way. |
 | Log parsing to the console | Off | Turn on while testing, see Troubleshooting. |
 | Label | `YouTube Tips:` | The text before the amount. |
 | Hide until the first Super Chat | No | Keeps the overlay clean at $0.00. |
@@ -49,7 +47,7 @@ overlay and only reads chat messages that StreamElements already hands to widget
 | Command to subtract from the total | `!tipsremove` | Manual fallback, see below. |
 | Always allow these usernames | *(empty)* | Optional escape hatch — mods and broadcaster are detected automatically. |
 | Storage key | `ytSuperChatTotal` | Only change it if you run two of these. |
-| Font / size / weight | Oswald, 44px, bold | Any Google Font; condensed ones match the reference look. |
+| Font / size / weight | Nunito, 30px, regular | Any Google Font; condensed ones match the reference look. |
 | Text, outline, flash colours | red on near-black | Outline keeps it readable over any footage. |
 | Outline width | 2px | 0 disables the outline. |
 | Alignment | Left | Keeps the label anchored as digits change width. |
@@ -115,49 +113,6 @@ different *Storage key* or close the editor.
 ([@fawazahmed0/currency-api](https://github.com/fawazahmed0/exchange-api)). If it is
 unreachable the widget falls back to an approximate built-in table and logs a warning, a few
 cents of drift is expected either way.
-
-## Can viewers fake a Super Chat?
-
-Partly, and it's worth understanding where the line is. Everything RestreamBot relays, real
-Super Chats *and* ordinary YouTube chat messages, arrives in Twitch chat through the same bot,
-so the message text is the only thing to go on.
-
-The widget therefore requires the **entire message** to match one of the two shapes RestreamBot
-actually posts:
-
-```
-[YouTube: @handle] Super Chat - 7.77 USD
-[YouTube: @handle] Super Chat - 7.77 USD : thanks for the stream
-```
-
-Free text is allowed only after the ` : ` separator, exactly where a supporter's own comment
-goes. Apart from that, only case, spacing, the dash character and decimal commas may vary.
-Extra text before the prefix, text after the amount without a colon, a different separator, a
-currency symbol, or a missing `[YouTube: …]` prefix are all ignored. That defeats the obvious
-attempt, a viewer who types the whole fake line gets it wrapped in a *second*
-`[YouTube: @them]` prefix by the relay, which no longer matches.
-
-**What it does not defeat:** a viewer typing exactly `Super Chat - 100 USD` and nothing else.
-The relay turns that into a line identical to a genuine one, and no parser can tell them apart.
-Two things limit the damage:
-
-- Relayed Super Chats above **$500** are ignored, because that is YouTube's own per-message
-  limit, so a fake can never be large. Adjustable, `0` disables it.
-- `!tipsremove 100` fixes the total if someone does slip one through.
-
-If Restream ever distinguishes the two in the relayed text, the check can be tightened further;
-send a sample of an ordinary relayed message if you want that looked at.
-
-## What this cannot do
-
-It only sees what RestreamBot posts. If the relay drops out, gets rate-limited during a busy
-chat, or Restream changes the message format, those Super Chats are missed and there is no way
-to notice or recover them, chat gives you one shot at each message.
-
-If you want a total that is authoritative and can be reconciled after the fact, the local
-plugin in the parent directory reads Super Chats straight from YouTube's API instead (every
-event has a stable id and 30 days of history), at the cost of a Google OAuth setup and a
-process running on your machine. See the [main README](../README.md).
 
 ## Development
 
