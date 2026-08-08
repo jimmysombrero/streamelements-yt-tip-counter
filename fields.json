@@ -1,0 +1,133 @@
+{
+  "botName": {
+    "type": "text",
+    "label": "Relay bot username",
+    "value": "restreambot",
+    "group": "Source"
+  },
+  "includeSuperStickers": {
+    "type": "dropdown",
+    "label": "Count Super Stickers too",
+    "value": "yes",
+    "options": { "yes": "Yes", "no": "No" },
+    "group": "Source"
+  },
+  "maxSuperChatUsd": {
+    "type": "number",
+    "label": "Ignore relayed Super Chats above this many USD (YouTube's own limit is 500; 0 = no limit)",
+    "value": 0,
+    "min": 0,
+    "max": 10000,
+    "step": 10,
+    "group": "Source"
+  },
+  "debug": {
+    "type": "dropdown",
+    "label": "Log parsing to the browser console",
+    "value": "no",
+    "options": { "no": "Off", "yes": "On" },
+    "group": "Source"
+  },
+  "labelText": {
+    "type": "text",
+    "label": "Label",
+    "value": "YouTube Tips:",
+    "group": "Content"
+  },
+  "hideWhenZero": {
+    "type": "dropdown",
+    "label": "Hide until the first Super Chat",
+    "value": "no",
+    "options": { "no": "No, always show", "yes": "Yes, hide at $0.00" },
+    "group": "Content"
+  },
+  "resetAfterHours": {
+    "type": "number",
+    "label": "Start a new total after this many hours idle (0 = never)",
+    "value": 0,
+    "min": 0,
+    "max": 72,
+    "step": 1,
+    "group": "Resetting"
+  },
+  "resetCommand": {
+    "type": "text",
+    "label": "Chat command to reset now (you and your mods only)",
+    "value": "!tipsreset",
+    "group": "Resetting"
+  },
+  "addCommand": {
+    "type": "text",
+    "label": "Command to add to the total, e.g. !tipsadd 7.77 or !tipsadd 50 SEK",
+    "value": "!tipsadd",
+    "group": "Resetting"
+  },
+  "removeCommand": {
+    "type": "text",
+    "label": "Command to subtract from the total, e.g. !tipsremove 5",
+    "value": "!tipsremove",
+    "group": "Resetting"
+  },
+  "storeKey": {
+    "type": "text",
+    "label": "Storage key (change only if you run two of these)",
+    "value": "ytSuperChatTotal",
+    "group": "Resetting"
+  },
+  "fontFamily": {
+    "type": "googleFont",
+    "label": "Font",
+    "value": "Oswald",
+    "group": "Appearance"
+  },
+  "fontSize": {
+    "type": "number",
+    "label": "Font size (px)",
+    "value": 44,
+    "min": 10,
+    "max": 200,
+    "step": 1,
+    "group": "Appearance"
+  },
+  "fontWeight": {
+    "type": "dropdown",
+    "label": "Font weight",
+    "value": "700",
+    "options": { "400": "Regular", "600": "Semi bold", "700": "Bold", "800": "Extra bold" },
+    "group": "Appearance"
+  },
+  "textColor": {
+    "type": "colorpicker",
+    "label": "Text colour",
+    "value": "#e02b2b",
+    "group": "Appearance"
+  },
+  "outlineColor": {
+    "type": "colorpicker",
+    "label": "Outline colour",
+    "value": "#1c0505",
+    "group": "Appearance"
+  },
+  "outlineWidth": {
+    "type": "number",
+    "label": "Outline width (px)",
+    "value": 2,
+    "min": 0,
+    "max": 12,
+    "step": 1,
+    "group": "Appearance"
+  },
+  "bumpColor": {
+    "type": "colorpicker",
+    "label": "Flash colour when the total goes up",
+    "value": "#ff6f6f",
+    "group": "Appearance"
+  },
+  "alignment": {
+    "type": "dropdown",
+    "label": "Alignment",
+    "value": "left",
+    "options": { "left": "Left", "center": "Center", "right": "Right" },
+    "group": "Appearance"
+  }
+}

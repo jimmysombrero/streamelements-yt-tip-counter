@@ -1,0 +1,62 @@
+/* StreamElements custom widget CSS tab
+   The {{...}} values are filled in by StreamElements from the widget's Settings
+   panel, so the styling applies even before any JavaScript runs. */
+:root {
+  --font: "Nunito", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --size: 30px;
+  --weight: bold;
+  --letter-spacing: 0.01em;
+  --color: {{textColor}};
+  --outline-color: {{outlineColor}};
+  --outline-width: {{outlineWidth}}px;
+  --align: {{alignment}};
+  --bump-color: {{bumpColor}};
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: var(--align);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+#line {
+  padding: 6px 10px;
+  font-size: var(--size);
+  font-weight: var(--weight);
+  letter-spacing: var(--letter-spacing);
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--color);
+
+  /* Stroke behind the fill so the letterforms keep their full weight. */
+  -webkit-text-stroke: var(--outline-width) var(--outline-color);
+  paint-order: stroke fill;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.55));
+
+  transition: color 0.45s ease, opacity 0.3s ease;
+}
+
+/* Keeps the label from shifting as the digits change width. */
+#total {
+  font-variant-numeric: tabular-nums;
+}
+
+#line.bump {
+  color: var(--bump-color);
+  transition: color 0.08s ease;
+}
+
+/* Optionally stay invisible until the first Super Chat of the stream. */
+#line.hide-when-zero {
+  opacity: 0;
+}
