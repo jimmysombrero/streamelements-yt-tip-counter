@@ -312,7 +312,7 @@ function handleTipMessage(event) {
   // from a real purchase. Cheap insurance against a viewer typing a fake line.
   if (cfg.maxSuperChatUsd > 0 && cents > cfg.maxSuperChatUsd * 100) {
     console.warn(
-      `[yt-tips] ignoring an implausible Super Chat of ${formatUsd(cents)} from ${parsed.handle} ` +
+      `[yt-tips] ignoring an implausible Super Chat of ${formatUsd(cents)} from ${user} ` +
         `(limit ${formatUsd(cfg.maxSuperChatUsd * 100)}). Raise it in the widget settings if this was real.`,
     );
     return;
