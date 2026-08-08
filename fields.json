@@ -1,17 +1,4 @@
 {
-  "botName": {
-    "type": "text",
-    "label": "Relay bot username",
-    "value": "restreambot",
-    "group": "Source"
-  },
-  "includeSuperStickers": {
-    "type": "dropdown",
-    "label": "Count Super Stickers too",
-    "value": "yes",
-    "options": { "yes": "Yes", "no": "No" },
-    "group": "Source"
-  },
   "maxSuperChatUsd": {
     "type": "number",
     "label": "Ignore relayed Super Chats above this many USD (YouTube's own limit is 500; 0 = no limit)",
@@ -77,13 +64,13 @@
   "fontFamily": {
     "type": "googleFont",
     "label": "Font",
-    "value": "Oswald",
+    "value": "Nunito",
     "group": "Appearance"
   },
   "fontSize": {
     "type": "number",
     "label": "Font size (px)",
-    "value": 44,
+    "value": 30,
     "min": 10,
     "max": 200,
     "step": 1,
@@ -92,7 +79,7 @@
   "fontWeight": {
     "type": "dropdown",
     "label": "Font weight",
-    "value": "700",
+    "value": "400",
     "options": { "400": "Regular", "600": "Semi bold", "700": "Bold", "800": "Extra bold" },
     "group": "Appearance"
   },
