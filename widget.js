@@ -234,14 +234,14 @@ async function restore() {
 
 /** Broadcaster and moderators only. Everyone else is ignored. */
 function isPrivileged(data, nick) {
-  const tags = data.tags || {};
+  const isModerator = data.authorDetails.isChatModerator;
+  const isOwner = data.authorDetails.isChatOwner;
   // Explicit moderator flag from Twitch.
-  if (tags.mod === '1' || tags.mod === 1 || data.mod === true) return true;
-
-  // The broadcaster is the user whose own id is the channel's room id.
-  const userId = tags['user-id'] || data.userId;
-  const roomId = tags['room-id'];
-  if (userId && roomId && String(userId) === String(roomId)) return true;
+  if( isModerator === true || isOwner === true) {
+    return true;
+  } else {
+    return false;
+  }
 
   // Badges arrive either as an array of objects or as the raw IRC string
   // ("broadcaster/1,subscriber/12"). Compare badge names exactly — a substring
@@ -252,6 +252,8 @@ function isPrivileged(data, nick) {
     : String(raw).split(',').map((b) => b.split('/')[0]);
   if (names.some((n) => n.toLowerCase() === 'broadcaster' || n.toLowerCase() === 'moderator')) {
     return true;
+  } else {
+    return false;
   }
 
   // Escape hatch: if StreamElements ever delivers badges in a shape we do not
@@ -294,42 +296,76 @@ function adjustTotal(sign, args, msgId, nick) {
   render();
 }
 
-function handleTipMessage(event) {
-  const user = event.name;
-  const donationAmount = event.amount;
-  const donationMessage = event.message;
-  const currency = event.currency;
-  const msgId = `${user}:${donationAmount}:${Date.now()}`;
+function handleSuperStickerMessage(event) {
+  const snippet = event.data.snippet;
+  const superStickerDetails = snippet.superStickerDetails;
+  const currency = superStickerDetails.currency;
+  const msgId = event.data.msgId;
+  const amount = Number(superStickerDetails.amountMicros)/1000000;
+  const user = event.data.displayName;
 
-  if (state.events.some((e) => e.id === msgId)) {
+  let ytTip = {
+    msgId: msgId,
+    user: user,
+    amount: amount,
+    currency: currency
+  }
+
+  log('super sticker info: event', event);
+  log('super sticker object', ytTip);
+
+  handleTipData(ytTip);
+}
+
+function handleTipMessage(event) {
+  const eventData = event.data;
+  const user = eventData.username;
+  const donationAmount = eventData.amount;
+  const donationMessage = eventData.message;
+  const currency = eventData.currency;
+  const msgId = event.activityId;
+  const type = event.type;
+
+  let ytTip = {
+    msgId: msgId,
+    user: user,
+    amount: donationAmount,
+    currency: currency
+  }
+
+  handleTipData(ytTip);
+}
+
+function handleTipData(ytTip) {
+  if (state.events.some((e) => e.id === ytTip.msgId)) {
     log('duplicate message id, ignoring');
     return;
   }
 
-  const cents = toUsdCents(donationAmount, currency);
+  const cents = toUsdCents(ytTip.amount, ytTip.currency);
 
   // YouTube caps a single Super Chat at $500, so anything larger did not come
   // from a real purchase. Cheap insurance against a viewer typing a fake line.
   if (cfg.maxSuperChatUsd > 0 && cents > cfg.maxSuperChatUsd * 100) {
     console.warn(
-      `[yt-tips] ignoring an implausible Super Chat of ${formatUsd(cents)} from ${user} ` +
+      `[yt-tips] ignoring an implausible Super Chat of ${formatUsd(cents)} from ${ytTip.user} ` +
         `(limit ${formatUsd(cfg.maxSuperChatUsd * 100)}). Raise it in the widget settings if this was real.`,
     );
     return;
   }
 
   state.events.push({
-    id: msgId,
+    id: ytTip.msgId,
     at: Date.now(),
-    amount: donationAmount,
-    currency: currency,
+    amount: ytTip.amount,
+    currency: ytTip.currency,
     cents: cents
   });
   state.lastEventAt = Date.now();
   if (!state.startedAt) state.startedAt = Date.now();
   prune();
 
-  log(`counted ${donationAmount} ${currency} -> ${formatUsd(cents)}; total ${formatUsd(totalCents())}`);
+  log(`counted ${ytTip.amount} ${ytTip.currency} -> ${formatUsd(cents)}; total ${formatUsd(totalCents())}`);
   persist();
   render();
 }
@@ -354,7 +390,7 @@ function handleMessage(event) {
 
   if (is(cfg.resetCommand) || is(cfg.addCommand) || is(cfg.removeCommand)) {
     if (!isPrivileged(data, user)) {
-      log('ignoring command from non-moderator', nick);
+      log('ignoring command from non-moderator', user);
       return;
     }
     if (is(cfg.resetCommand)) resetTally(`chat command from ${user}`);
@@ -438,22 +474,27 @@ window.addEventListener('onWidgetLoad', (obj) => {
 window.addEventListener('onEventReceived', (obj) => {
   const detail = (obj && obj.detail) || {};
   if (!detail.event) return;
+  const event = detail.event;
 
   // StreamElements suffixes some listeners ("tip-latest", "follower-latest"),
   // so compare on the part before the dash the way SE's own widgets do.
+
   const listener = String(detail.listener);
 
-  if (listener === 'tip-latest') {
-    handleTipMessage(detail.event);
+  if (listener === 'event' && event.type === 'superchat') {
+    handleTipMessage(event);
+    return;
+  } else if(listener === 'message' && event.data.snippet && event.data.snippet.type === 'superStickerEvent') {
+    handleSuperStickerMessage(event);
     return;
   } else if(listener === 'message') {
-    handleMessage(detail.event);
+    handleMessage(event);
     return;
   }
 
   // Another copy of this widget updated the shared store.
   if (listener === 'kvstore:update') {
-    const payload = (detail.event && detail.event.data) || detail.event || {};
+    const payload = (event && event.data) || detail.event || {};
     if (payload.key !== cfg.storeKey) return;
     if (mergeState(payload.value)) render();
   }
